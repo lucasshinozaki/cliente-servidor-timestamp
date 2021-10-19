@@ -41,7 +41,7 @@ main()
 
 // recvfrom recebe o timestamp do servidor
   recvfrom(sock, (char *)&timestamp, sizeof timestamp, 0, (struct sockaddr *)&name, &tamanho);
-
+  
 // imprime o valor do timestam recebido
   printf("CLIENTE: timestamp recebido: %d\n", timestamp);
 
