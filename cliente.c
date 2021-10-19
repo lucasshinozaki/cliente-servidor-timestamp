@@ -11,7 +11,7 @@
 main()
 
 {
-	int sock;
+	int sock, timestamp, tamanho;
 	struct sockaddr_in name;
 	struct hostent *hp, *gethostbyname();
 
@@ -40,8 +40,11 @@ main()
                 perror("sending datagram message");
 
 // recvfrom recebe o timestamp do servidor
+  recvfrom(sock, (char *)&timestamp, sizeof timestamp, 0, (struct sockaddr *)&name, &tamanho);
 
 // imprime o valor do timestam recebido
+  printf("CLIENTE: timestamp recebido: %d\n", timestamp);
+
         close(sock);
         exit(0);
 }
