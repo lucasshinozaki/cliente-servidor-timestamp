@@ -7,11 +7,21 @@
 #include <strings.h>
 #include <arpa/inet.h>
 
+//Declaração da struct 
+// int codigo, int resposta, long ip, int porta
+
+struct msg{
+  int codigo, resposta, porta;
+  long ip;
+}
+
+// No sendto e recfrom enviar e receber uma variavel struct
 main()
 {
 	int sock, length, cont = 0;
 	struct sockaddr_in name;
 	char buf[1024];
+  struct msg mensagem;
 
         /* Cria o socket de comunicacao */
 	sock = socket(AF_INET, SOCK_DGRAM, 0);
@@ -47,18 +57,19 @@ main()
 
 //loop infinito
 while(1){
-    recvfrom(sock, buf, 1024, 0, (struct sockaddr *)&name, &length);
+    recvfrom(sock, (char *)&mensagem, sizeof mensagem, 0, (struct sockaddr *)&name, &length);
     printf("SERVIDOR:  Familia: %d\n", name.sin_family);
     printf("SERVIDOR:  IP: %s\n", inet_ntoa(name.sin_addr));
     printf("SERVIDOR:  Porta: %d\n\n", name.sin_port);
-    printf("SERVIDOR:  %s\n", buf);
+    //printf("SERVIDOR:  %s\n", buf);
 
       
     // servico (cont++)
     cont++;
+    mensagem.resposta = cont;
 
     // sendTo para o cliente
-    sendto(sock, (char *)&cont, sizeof cont, 0, (struct sockaddr *)&name, sizeof name);
+    sendto(sock, (char *)&mensagem, sizeof mensagem, 0, (struct sockaddr *)&name, sizeof name);
 }
 
   close(sock);

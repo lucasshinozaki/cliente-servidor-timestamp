@@ -8,12 +8,20 @@
 
 #define DATA "Esta eh a mensagem que quero enviar"
 
+//Declaração da struct 
+// int codigo, int resposta, long ip, int porta
+struct msg{
+  int codigo, resposta, porta;
+  long ip;
+}
+
 main()
 
 {
 	int sock, timestamp, tamanho;
 	struct sockaddr_in name;
 	struct hostent *hp, *gethostbyname();
+  struct msg mensagem;
 
         /* Cria o socket de comunicacao */
 	sock = socket(AF_INET, SOCK_DGRAM, 0);
@@ -35,15 +43,15 @@ main()
 	name.sin_port = htons(1234);
 
 	/* Envia */
-	if (sendto (sock,DATA,sizeof DATA, 0, (struct sockaddr *)&name,
+	if (sendto (sock, (char *)&mensagem,sizeof mensagem, 0, (struct sockaddr *)&name,
                     sizeof name)<0)
                 perror("sending datagram message");
 
 // recvfrom recebe o timestamp do servidor
-  recvfrom(sock, (char *)&timestamp, sizeof timestamp, 0, (struct sockaddr *)&name, &tamanho);
+  recvfrom(sock, (char *)&mensagem, sizeof mensagem, 0, (struct sockaddr *)&name, &tamanho);
   
 // imprime o valor do timestam recebido
-  printf("CLIENTE: timestamp recebido: %d\n", timestamp);
+  printf("CLIENTE: timestamp recebido: %d\n", mensagem.resposta);
 
         close(sock);
         exit(0);
